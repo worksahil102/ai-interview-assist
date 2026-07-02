@@ -365,11 +365,11 @@ function Step2Interview({ interviewData, onFinish }) {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#f6faf8] flex items-center justify-center p-8">
-      <div className="w-full max-w-7xl bg-white rounded-3xl shadow-xl overflow-hidden">
-        <div className="grid grid-cols-12">
+    <div className="min-h-screen bg-[#f6faf8] flex items-center justify-center p-3 sm:p-4 lg:p-8">
+      <div className="w-full max-w-7xl bg-white rounded-2xl lg:rounded-3xl shadow-xl overflow-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-12">
           {/* ================= Left Side ================= */}
-          <div className="col-span-4 border-r p-5">
+          <div className="lg:col-span-4 border-b lg:border-b-0 lg:border-r p-4 lg:p-5">
             {/* Video Card */}
             <div className="relative rounded-2xl overflow-hidden shadow border">
               <video
@@ -379,19 +379,19 @@ function Step2Interview({ interviewData, onFinish }) {
                 muted
                 playsInline
                 autoPlay
-                className="w-full h-[220px] object-cover"
+                className="w-full h-[180px] sm:h-[220px] object-cover"
               />
             </div>
             {subtitle && (
               <div className="mt-3 bg-gray-100 border border-gray-200 rounded-xl px-4 py-3 shadow-sm">
-                <p className="text-gray-700 text-sm leading-6 text-center">
+                <p className="text-sm lg:text-base text-gray-700 leading-6 text-center">
                   {subtitle}
                 </p>
               </div>
             )}
-
             {/* Interview Status Card */}
-            <div className="mt-5 rounded-2xl border shadow-sm p-5">
+            <div className="mt-4 rounded-2xl border shadow-sm p-4 lg:p-5">
+              {" "}
               <div className="flex justify-between items-center">
                 <span className="text-gray-500 text-sm">Interview Status</span>
 
@@ -401,18 +401,14 @@ function Step2Interview({ interviewData, onFinish }) {
                   </span>
                 )}
               </div>
-
               <div className="h-px bg-gray-200 my-4"></div>
-
               <div className="flex justify-center py-4">
                 <Timer
                   timeLeft={timeLeft}
                   totalTime={currentQuestion?.timeLimit}
                 />
               </div>
-
               <div className="h-px bg-gray-200 my-4"></div>
-
               <div className="flex justify-around">
                 <div className="text-center">
                   <h2 className="text-2xl font-bold text-green-600">{1}</h2>
@@ -430,33 +426,31 @@ function Step2Interview({ interviewData, onFinish }) {
               </div>
             </div>
           </div>
-
           {/* ================= Right Side ================= */}
-          <div className="col-span-8 p-6 flex flex-col">
-            <h1 className="text-3xl font-bold text-emerald-600 mb-6">
+          <div className="lg:col-span-8 p-4 lg:p-6 flex flex-col">
+            <h1 className="text-2xl lg:text-3xl font-bold text-emerald-600 mb-4 lg:mb-6">
               AI Smart Interview
             </h1>
-
             {/* Question Card */}
             {!isIntroPhase && (
-              <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+              <div className="rounded-2xl border border-gray-200 bg-white p-4 lg:p-6 shadow-sm">
+                {" "}
                 <p className="text-gray-400 text-xs font-medium">
                   Question {currentIndex + 1} of {questions.length}
                 </p>
-                <h2 className="text-xl font-semibold mt-2">
+                <h2 className="text-lg lg:text-xl font-semibold mt-2 leading-7">
                   {currentQuestion?.question}
                 </h2>
               </div>
             )}
-
             {/* Answer Box */}
             <div className="relative flex-1 mt-5">
               <textarea
                 value={answer}
                 onChange={(e) => setAnswer(e.target.value)}
                 placeholder="Type your answer here..."
-                className="w-full min-h-[360px] rounded-2xl border border-gray-200 bg-gray-50
-p-6
+                className="w-full min-h-[220px] lg:min-h-[360px] rounded-2xl border border-gray-200 bg-gray-50
+p-4 lg:p-6
 text-gray-700
 resize-none
 outline-none
@@ -469,11 +463,11 @@ transition
 
               {/* Mic Button */}
               {!feedback ? (
-                <div className="mt-6 flex items-center gap-4">
+                <div className="mt-6 flex flex-col sm:flex-row items-center gap-3">
                   {/* Mic */}
                   <button
                     onClick={toggleMic}
-                    className={`w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition-all duration-300
+                    className={`w-full sm:w-14 h-12 sm:h-14 rounded-full flex items-center justify-center shadow-lg transition-all duration-300
       ${
         isMicOn
           ? "bg-black text-white hover:scale-105 "
@@ -486,29 +480,28 @@ transition
                       <FaMicrophoneSlash size={20} />
                     )}
                   </button>
-
                   {/* Submit */}
                   <button
                     onClick={submitAnswer}
                     disabled={isSubmitting}
-                    className="flex-1 h-14 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-semibold shadow-lg transition-all duration-300 disabled:bg-gray-400"
+                    className="w-full sm:flex-1 h-12 sm:h-14 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-semibold shadow-lg transition-all duration-300 disabled:bg-gray-400"
                   >
                     {isSubmitting ? "Submitting..." : "Submit Answer"}
                   </button>
                 </div>
               ) : (
-                <div className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
+                <div className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 lg:p-5">
+                  {" "}
                   <h3 className="text-emerald-700 font-semibold mb-3">
                     AI Feedback
                   </h3>
-
-                  <p className="text-gray-700 leading-7 whitespace-pre-wrap">
+                  <p className="text-sm lg:text-base text-gray-700 leading-7 whitespace-pre-wrap">
+                    {" "}
                     {feedback}
                   </p>
-
                   <button
                     onClick={handleNext}
-                    className="mt-5 w-full h-12 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-semibold flex items-center justify-center gap-2 transition-all"
+                    className="mt-5 w-full h-12 lg:h-14 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-semibold flex items-center justify-center gap-2 transition-all"
                   >
                     {currentIndex + 1 === questions.length
                       ? "Finish Interview"
