@@ -38,59 +38,115 @@ function Step2Interview({ interviewData, onFinish }) {
   console.log("currentIndex:", currentIndex);
   console.log("questions:", questions);
   console.log("currentQuestion:", currentQuestion);
+
   useEffect(() => {
     const loadVoices = () => {
       const voices = window.speechSynthesis.getVoices();
+
       if (!voices.length) return;
 
-      const femaleVoice = voices.find(
-        (v) =>
-          v.name.toLowerCase().includes("zira") ||
-          v.name.toLowerCase().includes("samantha") ||
-          v.name.toLowerCase().includes("female"),
+      const englishVoices = voices.filter((v) =>
+        v.lang.toLowerCase().startsWith("en"),
       );
-      if (femaleVoice) {
-        setSelectedVoice(femaleVoice);
-        setVoiceGender("female");
-        return;
-      }
+
       const voice =
-        voices.find((v) => v.name.includes("Aria")) ||
-        voices.find((v) => v.name.includes("Jenny")) ||
-        voices.find((v) => v.name.includes("Guy")) ||
+        englishVoices.find((v) => v.name.toLowerCase().includes("female")) ||
+        englishVoices.find((v) => v.name.toLowerCase().includes("zira")) ||
+        englishVoices.find((v) => v.name.toLowerCase().includes("jenny")) ||
+        englishVoices[0] ||
         voices[0];
 
-      // setSelectedVoice(voice);
-      if (maleVoice) {
-        setSelectedVoice(maleVoice);
-        setVoiceGender("male");
-        return;
-      }
-
       setSelectedVoice(voice);
-      setVoiceGender("female");
+
+      if (
+        voice &&
+        (voice.name.toLowerCase().includes("guy") ||
+          voice.name.toLowerCase().includes("male"))
+      ) {
+        setVoiceGender("male");
+      } else {
+        setVoiceGender("female");
+      }
     };
+
     loadVoices();
-    window.speechSynthesis.onvoiceschanged = loadVoices;
+
+    speechSynthesis.onvoiceschanged = loadVoices;
+
+    return () => {
+      speechSynthesis.onvoiceschanged = null;
+    };
   }, []);
 
   const videoSource = voiceGender === "male" ? maleVideo : femaleVideo;
   // Example Data
 
+  // const speakText = (text) => {
+  //   return new Promise((resolve) => {
+  //     if (!window.speechSynthesis) {
+  //       resolve();
+  //       return;
+  //     }
+
+  //     const utterance = new SpeechSynthesisUtterance(text);
+
+  //     if (selectedVoice) {
+  //       utterance.voice = selectedVoice;
+  //     }
+
+  //     window.speechSynthesis.cancel();
+
+  //     const humanText = text.replace(/,/g, " , ... ".replace(/\./g, ". ... "));
+
+  //     const utterance = new SpeechSynthesisUtterance(humanText);
+
+  //     utterance.voice = selectedVoice;
+
+  //     utterance.rate = 0.92;
+  //     utterance.pitch = 1.05;
+  //     utterance.volume = 1;
+
+  //     utterance.onstart = () => {
+  //       setIsAIPlaying(true);
+  //       stoptMic();
+  //       videoRef.current?.play();
+  //     };
+
+  //     utterance.onend = () => {
+  //       videoRef.current?.pause();
+  //       videoRef.current.currentTime = 0;
+  //       setIsAIPlaying(false);
+  //       if (isMicOn) {
+  //         startMic();
+  //       }
+
+  //       setTimeout(() => {
+  //         setSubtitle("");
+  //         resolve();
+  //       }, 300);
+  //     };
+
+  //     setSubtitle(text);
+
+  //     window.speechSynthesis.speak(utterance);
+  //   });
+  // };
   const speakText = (text) => {
     return new Promise((resolve) => {
-      if (!window.speechSynthesis || !selectedVoice) {
+      if (!window.speechSynthesis) {
         resolve();
         return;
       }
 
       window.speechSynthesis.cancel();
 
-      const humanText = text.replace(/,/g, " , ... ".replace(/\./g, ". ... "));
+      const humanText = text.replace(/,/g, ", ... ").replace(/\./g, ". ... ");
 
       const utterance = new SpeechSynthesisUtterance(humanText);
 
-      utterance.voice = selectedVoice;
+      if (selectedVoice) {
+        utterance.voice = selectedVoice;
+      }
 
       utterance.rate = 0.92;
       utterance.pitch = 1.05;
@@ -105,7 +161,9 @@ function Step2Interview({ interviewData, onFinish }) {
       utterance.onend = () => {
         videoRef.current?.pause();
         videoRef.current.currentTime = 0;
+
         setIsAIPlaying(false);
+
         if (isMicOn) {
           startMic();
         }
@@ -123,7 +181,7 @@ function Step2Interview({ interviewData, onFinish }) {
   };
 
   useEffect(() => {
-    if (!selectedVoice) {
+    if (!window.speechSynthesis) {
       return;
     }
 
@@ -172,11 +230,17 @@ function Step2Interview({ interviewData, onFinish }) {
   }, [isIntroPhase, currentIndex, isSubmitting]);
 
   useEffect(() => {
-    if (!("webkitSpeechRecognition" in window)) return;
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
 
-    const recognition = new window.webkitSpeechRecognition();
+    if (!SpeechRecognition) {
+      alert("Speech Recognition is not supported on this device.");
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
     recognition.lang = "en-US";
-    recognition.continous = true;
+    recognition.continuous = true;
     recognition.interimResults = true;
 
     recognition.onresult = (event) => {
@@ -201,6 +265,8 @@ function Step2Interview({ interviewData, onFinish }) {
   };
 
   const toggleMic = () => {
+    // speechSynthesis.resume();
+
     if (isMicOn) {
       stoptMic();
     } else {
