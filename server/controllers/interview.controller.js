@@ -301,6 +301,7 @@ Answer: ${answer}
     ];
 
     const aiResponse = await askAi({ messages });
+    console.log(aiResponse);
 
     const parsed = JSON.parse(aiResponse);
 
@@ -310,6 +311,7 @@ Answer: ${answer}
     question.correctness = parsed.correctness;
     question.finalScore = parsed.finalScore;
     question.feedback = parsed.feedback;
+
     await interview.save();
 
     return res.status(200).json({ feedback: parsed.feedback });

@@ -26,6 +26,10 @@ function Step1SetUp({ onStart }) {
   const [resumeText, setResumeText] = useState("");
   const [analysisDone, setAnalysisDone] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
+  const [errors, setErrors] = useState({
+    role: "",
+    experience: "",
+  });
 
   const handleUploadResume = async () => {
     if (!resumeFile || analyzing) return;
@@ -52,6 +56,10 @@ function Step1SetUp({ onStart }) {
       setProjects(response.data.projects || []);
       setSkills(response.data.skills || []);
       setResumeText(response.data.resumeText || "");
+      setErrors({
+        role: "",
+        experience: "",
+      });
       setAnalysisDone(true);
     } catch (error) {
       console.error(error);
@@ -61,6 +69,22 @@ function Step1SetUp({ onStart }) {
   };
 
   const handleStart = async () => {
+    const newErrors = {};
+
+    if (!role.trim()) {
+      newErrors.role = "Please enter your job role.";
+    }
+
+    if (!experience.trim()) {
+      newErrors.experience = "Please enter your experience.";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setErrors({});
     setLoading(true);
     try {
       const response = await axios.post(
@@ -79,10 +103,10 @@ function Step1SetUp({ onStart }) {
         );
       }
 
-      setLoading(false);
       onStart(response.data);
     } catch (error) {
       console.error(error);
+    } finally {
       setLoading(false);
     }
   };
@@ -118,11 +142,11 @@ function Step1SetUp({ onStart }) {
               },
               {
                 icon: <FaMicrophoneAlt />,
-                text: "choose Role & Experience",
+                text: "Smart Voice Interview",
               },
               {
                 icon: <FaChartLine />,
-                text: "choose Role & Experience",
+                text: "Performance Analytics",
               },
             ].map((item, idx) => (
               <motion.div
@@ -160,9 +184,21 @@ function Step1SetUp({ onStart }) {
                 className="w-full h-14 rounded-xl border border-gray-200 bg-gray-50 pl-12 pr-4 outline-none focus:ring-4 focus:ring-green-100 focus:border-green-500 transition"
                 type="text"
                 placeholder="Enter role"
-                onChange={(e) => setRole(e.target.value)}
+                onChange={(e) => {
+                  setRole(e.target.value);
+
+                  if (errors.role) {
+                    setErrors((prev) => ({
+                      ...prev,
+                      role: "",
+                    }));
+                  }
+                }}
                 value={role}
               />
+              {errors.role && (
+                <p className="mt-2 text-sm text-red-500">{errors.role}</p>
+              )}
             </div>
 
             {/* Experience */}
@@ -174,15 +210,27 @@ function Step1SetUp({ onStart }) {
                 className="w-full h-14 rounded-xl border border-gray-200 bg-gray-50 pl-12 pr-4 outline-none focus:ring-4 focus:ring-green-100 focus:border-green-500 transition"
                 type="text"
                 placeholder="Experience"
-                onChange={(e) => setExperience(e.target.value)}
+                onChange={(e) => {
+                  setExperience(e.target.value);
+
+                  if (errors.experience) {
+                    setErrors((prev) => ({
+                      ...prev,
+                      experience: "",
+                    }));
+                  }
+                }}
                 value={experience}
               />
+              {errors.experience && (
+                <p className="mt-2 text-sm text-red-500">{errors.experience}</p>
+              )}
             </div>
 
             {/* Mode */}
 
             <select
-              className="w-full h-14 rounded-xl border border-gray-200 bg-gray-50 px-4 outline-none focus:ring-4 focus:ring-green-100 focus:border-green-500 transition"
+              className={`w-full h-14 rounded-xl bg-gray-50 pl-12 pr-4 outline-none transition ${errors.role ? "border-red-500 focus:ring-red-100" : "border-gray-200 focus:ring-green-100 focus:border-green-500"}`}
               value={mode}
               onChange={(e) => setMode(e.target.value)}
             >
@@ -273,7 +321,7 @@ function Step1SetUp({ onStart }) {
 
             <motion.button
               onClick={handleStart}
-              disabled={!role || !experience || loading}
+              disabled={loading}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="w-full h-14 rounded-xl bg-black text-white font-semibold text-lg shadow-lg hover:bg-gray-900 transition"

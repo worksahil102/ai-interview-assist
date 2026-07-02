@@ -49,8 +49,8 @@ function CircularProgress({ score }) {
 
   return (
     <>
-      <div className="flex justify-center">
-        <svg width={170} height={170}>
+      <div className="flex justify-center ">
+        <svg width="100%" height="100" viewBox="0 0 170 170">
           <circle
             stroke="#ECECEC"
             fill="transparent"
@@ -59,7 +59,6 @@ function CircularProgress({ score }) {
             cx="85"
             cy="85"
           />
-
           <circle
             stroke="#10B981"
             fill="transparent"
@@ -75,7 +74,6 @@ function CircularProgress({ score }) {
             cy="85"
             transform="rotate(-90 85 85)"
           />
-
           <text
             x="50%"
             y="50%"
@@ -90,9 +88,9 @@ function CircularProgress({ score }) {
 
       <p className="text-center text-gray-500 mt-2">Out of 10</p>
 
-      <h2 className="font-bold text-xl mt-6 text-center">{msg.title}</h2>
+      <h2 className="font-bold text-md mt-6 text-center">{msg.title}</h2>
 
-      <p className="text-center text-gray-500 mt-2">{msg.sub}</p>
+      <p className="text-center text-gray-500 mt-1">{msg.sub}</p>
     </>
   );
 }
@@ -133,6 +131,8 @@ function ScoreBadge({ score }) {
 }
 
 function Step3Report({ report }) {
+  console.log("REPORT ==========:", report);
+
   if (!report) return null;
 
   const {
@@ -147,38 +147,38 @@ function Step3Report({ report }) {
     name: `Q${i + 1}`,
     score: q.score,
   }));
-
+  console.log("chart data", chartData);
   return (
-    <div className="min-h-screen bg-[#f7fbf9] p-10">
+    <div className="min-h-screen bg-[#f7fbf9] p-4 md:p-6 lg:px-20 lg:py-10">
       {/* HEADER */}
 
-      <div className="flex justify-between items-start mb-8">
-        <div className="flex gap-5">
-          <button className="w-12 h-12 rounded-full bg-white shadow flex justify-center items-center">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-5 mb-8">
+        <div className="flex items-start gap-4">
+          <button className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white shadow flex justify-center items-center">
             <FaArrowLeft />
           </button>
 
           <div>
-            <h1 className="text-5xl font-bold text-gray-800">
+            <h1 className="text-2xl md:text-4xl lg:text-3xl font-bold text-gray-800">
               Interview Analytics Dashboard
             </h1>
 
-            <p className="text-gray-500 mt-2 text-lg">
+            <p className="text-gray-500 mt-2 text-sm md:text-lg">
               AI-powered performance insights
             </p>
           </div>
         </div>
 
-        <button className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl shadow-lg flex items-center gap-3">
+        <button className="w-full md:w-auto bg-green-600 hover:bg-green-700 text-white px-5 md:px-8 py-3 md:py-4 lg:px-4  lg:py-2  rounded-xl shadow-lg flex justify-center items-center gap-3">
           <FaDownload />
           Download PDF
         </button>
       </div>
 
-      <div className="grid grid-cols-12 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+        {" "}
         {/* LEFT */}
-
-        <div className="col-span-4 space-y-8">
+        <div className="lg:col-span-4 space-y-2">
           <div className="bg-white rounded-3xl shadow-xl p-8">
             <h3 className="text-center text-gray-500 text-lg">
               Overall Performance
@@ -198,14 +198,15 @@ function Step3Report({ report }) {
           </div>
         </div>
         {/* RIGHT */}
-
-        <div className="col-span-8 space-y-8">
+        <div className="lg:col-span-8 space-y-6">
           {/* Performance Trend */}
 
-          <div className="bg-white rounded-3xl shadow-xl p-8">
-            <h2 className="text-2xl font-bold mb-6">Performance Trend</h2>
+          <div className="bg-white rounded-3xl shadow-xl p-5 md:p-8 h-60 md:h-80 w-full">
+            <h2 className="text-xl md:text-2xl font-bold mb-6">
+              Performance Trend
+            </h2>
 
-            <ResponsiveContainer width="100%" height={320}>
+            <ResponsiveContainer width="100%" width="100%" height="100%">
               <AreaChart
                 data={chartData}
                 margin={{
@@ -244,57 +245,60 @@ function Step3Report({ report }) {
 
           {/* Question Analysis */}
 
-          <div className="bg-white rounded-3xl shadow-xl p-8">
-            <h2 className="text-2xl font-bold mb-8">Question Analysis</h2>
+          <div className="bg-white rounded-xl shadow-xl px-6 py-3">
+            <h2 className="text-2xl font-bold mb-3">Question Analysis</h2>
 
             <div className="space-y-6">
               {questionWiseScore.map((item, index) => (
                 <div
                   key={index}
-                  className="border rounded-2xl p-6 hover:shadow-md transition"
+                  className="border-gray-300 border rounded-xl p-2 md:p-4 hover:shadow-xl transition"
                 >
-                  <div className="flex justify-between items-start gap-5">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
                     <div className="flex-1">
                       <p className="text-sm text-emerald-600 font-semibold mb-2">
                         Question {index + 1}
                       </p>
 
-                      <h3 className="font-semibold text-lg text-gray-800 leading-8">
+                      <h3 className="font-semibold text-base md:text-lg lg:text-xs text-gray-800 leading-7">
                         {item.question}
                       </h3>
                     </div>
 
-                    <ScoreBadge score={item.score} />
+                    <ScoreBadge
+                      score={item.score}
+                      className={`self-start sm:self-auto px-4 md:px-5 py-2 rounded-full font-bold`}
+                    />
                   </div>
 
-                  <div className="grid grid-cols-3 gap-4 mt-6">
-                    <div className="bg-gray-50 rounded-xl p-4 text-center">
-                      <p className="text-sm text-gray-500">Confidence</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-2">
+                    <div className="bg-gray-50 rounded-xl flex justify-center items-center py-1">
+                      <p className="text-sm text-gray-500">Confidence :</p>
 
-                      <h4 className="text-2xl font-bold text-green-600 mt-2">
+                      <span className="text-xl md:text-xl font-bold text-green-600 ml-3 ">
                         {item.confidence}
-                      </h4>
+                      </span>
                     </div>
 
-                    <div className="bg-gray-50 rounded-xl p-4 text-center">
-                      <p className="text-sm text-gray-500">Communication</p>
+                    <div className="bg-gray-50 rounded-xl flex justify-center items-center">
+                      <p className="text-sm text-gray-500">Communication : </p>
 
-                      <h4 className="text-2xl font-bold text-green-600 mt-2">
+                      <h4 className="text-xl md:text-xl font-bold text-green-600 ml-3">
                         {item.communication}
                       </h4>
                     </div>
 
-                    <div className="bg-gray-50 rounded-xl p-4 text-center">
-                      <p className="text-sm text-gray-500">Correctness</p>
+                    <div className="bg-gray-50 rounded-xl flex justify-center items-center">
+                      <p className="text-sm text-gray-500">Correctness :</p>
 
-                      <h4 className="text-2xl font-bold text-green-600 mt-2">
+                      <h4 className="text-xl md:text-xl font-bold text-green-600 ml-3">
                         {item.correctness}
                       </h4>
                     </div>
                   </div>
 
-                  <div className="mt-6 bg-green-50 border border-green-200 rounded-xl p-5">
-                    <h4 className="font-semibold text-green-700 mb-2">
+                  <div className="mt-2 bg-green-50 border lg:text-xs border-green-200 rounded-xl p-4 md:py-1">
+                    <h4 className="text-gray-700 text-sm md:text-base text-green-600  lg:text-xs">
                       AI Feedback
                     </h4>
 

@@ -188,11 +188,11 @@ function Step2Interview({ interviewData, onFinish }) {
     const runIntro = async () => {
       if (isIntroPhase) {
         await speakText(
-          `Hi ${userName} , its great to meet you today . i hope youre feeling confident and ready .`,
+          `Hello ${userName}  Welcome to your AI interview. I hope you're feeling confident today.`,
         );
 
         await speakText(
-          "i'll ask you a few questions . just answer naturally , and take your time . let's begin",
+          "I'll ask you a few questions. Take your time, answer naturally, and do your best. Let's begin!",
         );
         setIsIntroPhase(false);
       } else if (currentQuestion) {
@@ -369,9 +369,9 @@ function Step2Interview({ interviewData, onFinish }) {
       <div className="w-full max-w-7xl bg-white rounded-2xl lg:rounded-3xl shadow-xl overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-12">
           {/* ================= Left Side ================= */}
-          <div className="lg:col-span-4 border-b lg:border-b-0 lg:border-r p-4 lg:p-5">
+          <div className="lg:col-span-4 border-b lg:border-b-0  p-4 lg:p-5">
             {/* Video Card */}
-            <div className="relative rounded-2xl overflow-hidden shadow border">
+            <div className="relative rounded-2xl overflow-hidden shadow ">
               <video
                 src={videoSource}
                 key={videoSource}
@@ -382,22 +382,21 @@ function Step2Interview({ interviewData, onFinish }) {
                 className="w-full h-[180px] sm:h-[220px] object-cover"
               />
             </div>
-            {subtitle && (
-              <div className="mt-3 bg-gray-100 border border-gray-200 rounded-xl px-4 py-3 shadow-sm">
-                <p className="text-sm lg:text-base text-gray-700 leading-6 text-center">
+            <div className="mt-3 bg-gray-100 border border-gray-200 rounded-xl px-4 py-3 shadow-sm h-25">
+              {subtitle && (
+                <p className="text-md lg:text-base text-gray-700 leading-6 text-center  ">
                   {subtitle}
                 </p>
-              </div>
-            )}
+              )}
+            </div>
             {/* Interview Status Card */}
-            <div className="mt-4 rounded-2xl border shadow-sm p-4 lg:p-5">
-              {" "}
+            <div className="mt-4 rounded-2xl  shadow-lg p-4 lg:p-5">
               <div className="flex justify-between items-center">
                 <span className="text-gray-500 text-sm">Interview Status</span>
 
                 {isAIPlaying && (
                   <span className="text-green-600 text-sm font-semibold">
-                    {isAIPlaying ? "AI Speaking ..." : ""}
+                    {isAIPlaying ? "AI Speaking..." : ""}
                   </span>
                 )}
               </div>
@@ -411,7 +410,9 @@ function Step2Interview({ interviewData, onFinish }) {
               <div className="h-px bg-gray-200 my-4"></div>
               <div className="flex justify-around">
                 <div className="text-center">
-                  <h2 className="text-2xl font-bold text-green-600">{1}</h2>
+                  <h2 className="text-2xl font-bold text-green-600">
+                    {currentIndex + 1}
+                  </h2>
 
                   <p className="text-xs text-gray-500">Current Question</p>
                 </div>
@@ -432,33 +433,23 @@ function Step2Interview({ interviewData, onFinish }) {
               AI Smart Interview
             </h1>
             {/* Question Card */}
-            {!isIntroPhase && (
-              <div className="rounded-2xl border border-gray-200 bg-white p-4 lg:p-6 shadow-sm">
-                {" "}
-                <p className="text-gray-400 text-xs font-medium">
-                  Question {currentIndex + 1} of {questions.length}
-                </p>
+            <div className="rounded-2xl border border-gray-200 bg-white p-4 lg:p-6 shadow-sm">
+              <p className="text-gray-400 text-xs font-medium">
+                Question {currentIndex + 1} of {questions.length}
+              </p>
+              {!isIntroPhase && (
                 <h2 className="text-lg lg:text-xl font-semibold mt-2 leading-7">
                   {currentQuestion?.question}
                 </h2>
-              </div>
-            )}
+              )}
+            </div>
             {/* Answer Box */}
             <div className="relative flex-1 mt-5">
               <textarea
                 value={answer}
                 onChange={(e) => setAnswer(e.target.value)}
                 placeholder="Type your answer here..."
-                className="w-full min-h-[220px] lg:min-h-[360px] rounded-2xl border border-gray-200 bg-gray-50
-p-4 lg:p-6
-text-gray-700
-resize-none
-outline-none
-focus:border-emerald-400
-focus:ring-2
-focus:ring-emerald-100
-transition
-"
+                className="w-full min-h-[220px] lg:min-h-[360px] rounded-2xl border border-gray-200 bg-gray-50 p-4 lg:p-6 text-gray-700 resize-none outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition "
               />
 
               {/* Mic Button */}
@@ -468,11 +459,7 @@ transition
                   <button
                     onClick={toggleMic}
                     className={`w-full sm:w-14 h-12 sm:h-14 rounded-full flex items-center justify-center shadow-lg transition-all duration-300
-      ${
-        isMicOn
-          ? "bg-black text-white hover:scale-105 "
-          : "bg-red-500 text-white hover:scale-105"
-      }`}
+                    ${isMicOn ? "bg-black text-white hover:scale-105 " : "bg-red-500 text-white hover:scale-105"}`}
                   >
                     {isMicOn ? (
                       <FaMicrophone size={20} />
