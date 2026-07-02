@@ -7,7 +7,8 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setUserData } from "./redux/userSlice";
 import InterviewPage from "./pages/InterviewPage";
-export const servrUrl = "http://localhost:8000";
+// export const servrUrl = "http://localhost:8000";
+export const servrUrl = "https://ai-interview-assist-2.onrender.com";
 
 function App() {
   const dispatch = useDispatch();
